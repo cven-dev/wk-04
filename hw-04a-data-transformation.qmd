@@ -15,7 +15,7 @@ execute:
 
 ## Task descriptions and starter code
 
-You will notice that the descriptions of tasks are getting shorter with less detail provided. This is the case for all functions you have previously practiced either in your homework or in live coding exercises in class. Tasks that are **fill in the blanks** exercises will also decrease.
+You will notice that the descriptions of tasks are getting shorter with less detail provided. This is the case for all functions you have previously practiced either in your homework or in live coding exercises in class. Tasks now provide complete working code examples to guide your learning.
 
 # Task 0: Load R packages
 
@@ -29,17 +29,13 @@ library(ggplot2)
 
 # Task 1: Data import
 
-**Fill in the blanks**
+Follow these steps to import the data:
 
 1.  Use the `read_csv()` function to import the 'country_level_data_0.csv' file from the wk-04/data folder by assigning it to an object name `global_waste_data`
-2.  Run the code contained in the code-chunk and fix any errors
-3.  Next to the code-chunk option `#| eval:` change the value from `false` to `true`
-4.  Render and fix any errors
+2.  Run the code contained in the code chunk and fix any errors
 
 ```{r}
-#| eval: false
-
-global_waste_data <- read_csv(here::here("wk-04/data/___"))
+global_waste_data <- read_csv(here::here("wk-04/data/country_level_data_0.csv"))
 ```
 
 # Task 2: Data tidying
@@ -48,24 +44,18 @@ global_waste_data <- read_csv(here::here("wk-04/data/___"))
 
 ### Part 1
 
-**Fill in the blanks**
+Follow these steps to select specific variables:
 
 1.  Start with the `global_waste_data` object and use the `select()` function to create a subset that only keeps the following variables:
 
 -   `iso3c`
--   all variables that end with "percent" (**Tipp: Use one of the [selection helper functions](https://dplyr.tidyverse.org/reference/select.html)**)
+-   all variables that end with "percent" (**Tip: Use one of the [selection helper functions](https://dplyr.tidyverse.org/reference/select.html)**)
 
-2.  Run the code contained in the code-chunk and fix any errors
-
-3.  Next to the code-chunk option `#| eval:` change the value from `false` to `true`
-
-4.  Render and fix any errors
+2.  Run the code contained in the code chunk and fix any errors
 
 ```{r}
-#| eval: false
-
 global_waste_data |> 
-  ___(___, ___("percent"))
+  select(iso3c, ends_with("percent"))
 ```
 
 ### Part 2
@@ -78,16 +68,19 @@ global_waste_data |>
 -   `income_id`
 -   `total_msw_total_msw_generated_tons_year`
 -   `population_population_number_of_people`
--   all variables starting with "composition" (**Tipp: Use one of the [selection helper functions](https://dplyr.tidyverse.org/reference/select.html)**)
+-   all variables starting with "composition" (**Tip: Use one of the [selection helper functions](https://dplyr.tidyverse.org/reference/select.html)**)
 
 2.  Store the subset as a new object in your environment with the name `composition`
 
 3.  Render and fix any errors
 
 ```{r}
-
-
-
+composition <- global_waste_data |> 
+  select(country_name, 
+         income_id, 
+         population_population_number_of_people, 
+         total_msw_total_msw_generated_tons_year,
+         starts_with("composition"))
 ```
 
 ## dplyr::rename()
@@ -109,9 +102,18 @@ global_waste_data |>
 5.  Render and fix any errors
 
 ```{r}
-
-
-
+composition_tidy <- composition |> 
+  rename(food_organic_waste = composition_food_organic_waste_percent,
+         glass = composition_glass_percent,
+         metal = composition_metal_percent,
+         other = composition_other_percent,
+         paper_cardboard = composition_paper_cardboard_percent,
+         plastic = composition_plastic_percent,
+         rubber_leather = composition_rubber_leather_percent,
+         wood = composition_wood_percent,
+         yard_garden_green_waste = composition_yard_garden_green_waste_percent,
+         msw_tons_year = total_msw_total_msw_generated_tons_year,
+         population = population_population_number_of_people)
 ```
 
 # Task 3: Data transformation
@@ -120,18 +122,13 @@ global_waste_data |>
 
 ### Part 1
 
-**Fill in the blanks**
+Follow these steps to filter for missing data:
 
 1.  Use the `filter()` function in combination with `is.na()` to create a subset from `composition_tidy` containing observations for countries with missing data for the variable named food_organic_waste
 
-2.  Next to the code-chunk option `#| eval:` change the value from `false` to `true`
-
 ```{r}
-#| eval: false
-
 composition_tidy |>  
-  filter(___(___))
-
+  filter(is.na(food_organic_waste))
 ```
 
 ### Part 2
@@ -141,8 +138,8 @@ composition_tidy |>
 1.  Use the `filter()` to create a subset from `composition_tidy` containing observations for countries classified as high-income countries (HIC).
 
 ```{r}
-
-
+composition_tidy |> 
+  filter(income_id == "HIC")
 ```
 
 ### Part 3
@@ -152,9 +149,8 @@ composition_tidy |>
 1.  Use the `filter()` to create a subset from `composition_tidy` containing observations for countries that are not classified as low-income countries (LIC).
 
 ```{r}
-
-
-
+composition_tidy |> 
+  filter(income_id != "LIC")
 ```
 
 ### Part 4
@@ -164,9 +160,8 @@ composition_tidy |>
 1.  Create a subset from `composition_tidy` containing observations for countries classified as high-income countries (HIC) and with food and organic waste composition greater than 50%.
 
 ```{r}
-
-
-
+composition_tidy |> 
+  filter(income_id == "HIC" & food_organic_waste > 50)
 ```
 
 ### Part 5
@@ -176,8 +171,8 @@ composition_tidy |>
 1.  Create a subset from `composition_tidy` containing observations for countries classified as high-income countries or low-income countries and with other waste composition greater than 40%.
 
 ```{r}
-
-
+composition_tidy |> 
+  filter((income_id == "HIC" | income_id == "LIC") & other > 40)
 ```
 
 ### Part 6
@@ -189,8 +184,8 @@ composition_tidy |>
 2.  Render and fix any errors
 
 ```{r}
-
-
+composition_tidy |> 
+  filter(country_name %in% c("Switzerland", "Ghana", "Kenya", "Turkey", "Nepal", "United States"))
 ```
 
 ## dplyr::mutate() & dplyr::relocate()
@@ -206,29 +201,26 @@ composition_tidy |>
 4.  Render and fix any errors
 
 ```{r}
-
-
-
+composition_tidy_capita <- composition_tidy |> 
+  mutate(msw_capita_kg_year = (msw_tons_year * 1000) / population) |> 
+  relocate(msw_capita_kg_year, .after = msw_tons_year)
 ```
 
 ## dplyr::mutate() & dplyr::case_when()
 
 In class, we have not yet looked at the `case_when()` function. Use the exercise and the code below to understand and describe what the function does.
 
-1.  Next to the code-chunk option `#| eval:` change the value from `false` to `true`
+1.  Run the code contained in the code chunk and fix any errors
 
-2.  Run the code contained in the code-chunk and fix any errors
+2.  What does the combination of `mutate()` and `case_when()` do?
 
-3.  What does the combination of `mutate()` and `case_when()` do?
+<!--# Remove this comment and use your own words to answer the question -->
 
-<!--# Remove this comment and use your own words to anwer the question -->
+3.  How is the object `levels_income_cat` used and what does it achieve?
 
-4.  How is the object `levels_income_cat` used and what does it achieve?
-
-<!--# Remove this comment and use your own words to anwer the question -->
+<!--# Remove this comment and use your own words to answer the question -->
 
 ```{r}
-#| eval: false
 
 levels_income_cat <- c("high income", 
                       "upper-middle income",
@@ -261,43 +253,37 @@ composition_tidy_capita_income_cat <- read_rds(here::here("wk-04/data/01-msw-gen
 
 ### Part 1
 
-**Fill in the blanks**
+Follow these steps to summarise the data:
 
 1.  Starting with `composition_tidy_capita_income_cat`, group the data by `income_id`, then create a summary table containing the number of observations (call this count) for each group.
 
-2.  Run the code contained in the code-chunk and fix any errors
+2.  Run the code contained in the code chunk and fix any errors
 
 3.  Describe what the resulting table that you can see in the Console shows you.
 
-4.  Next to the code-chunk option `#| eval:` change the value from `false` to `true`
-
-5.  Render and fix any errors
-
-<!--# Remove this comment and use your own words to anwer the question -->
+<!--# Remove this comment and use your own words to answer the question -->
 
 ```{r}
-#| eval: false
-
 composition_tidy_capita_income_cat |> 
-  ___(income_id) |> 
-  ___(___ = n())
-
+  group_by(income_id) |> 
+  summarise(count = n())
 ```
 
 **Write the code yourself**
 
 1.  Starting with `composition_tidy_capita_income_cat`, group the data by `income_cat`, then create a summary table containing the number of observations (call this count) for each group.
 
-2.  Observe the output in the Console and describe the difference to the resulting table of the previous code-chunk.
+2.  Observe the output in the Console and describe the difference to the resulting table of the previous code chunk.
 
-<!--# Remove this comment and use your own words to anwer the question -->
+<!--# Remove this comment and use your own words to answer the question -->
 
 ```{r}
-
-
+composition_tidy_capita_income_cat |> 
+  group_by(income_cat) |> 
+  summarise(count = n())
 ```
 
-**Fill in the blanks**
+Follow these steps to create a summary with mean values:
 
 1.  Starting with `composition_tidy_capita_income_cat`, group the data by `income_cat`, then create a summary table containing the number of observations (call this count) and mean Municipal Solid Waste (MSW) generation (variable `msw_capita_kg_year`) and call this mean_msw_total.
 
@@ -309,21 +295,14 @@ composition_tidy_capita_income_cat |>
 
 5.  Execute the code and observe the output in the Console. What has changed? How is that different to adding `na.rm = TRUE` as an argument to the `mean()` ?
 
-6.  Next to the code-chunk option `#| eval:` change the value from `false` to `true`
-
-7.  Render and fix any errors
-
 ```{r}
-#| eval: false
-
 composition_tidy_capita_income_cat |> 
   # tidyr::drop_na(msw_capita_kg_year) |> 
-  group_by(___) |> 
+  group_by(income_cat) |> 
   summarise(
-    count = ___,
-    mean_msw_total = ___(msw_capita_kg_year)
+    count = n(),
+    mean_msw_total = mean(msw_capita_kg_year)
   )
-
 ```
 
 **Write the code yourself**
@@ -335,9 +314,15 @@ composition_tidy_capita_income_cat |>
 3.  Store the summary table as a new object in your environment with the name `table_msw_generation`
 
 ```{r}
-
-
-
+table_msw_generation <- composition_tidy_capita_income_cat |> 
+  tidyr::drop_na(msw_capita_kg_year) |> 
+  group_by(income_cat) |> 
+  summarise(
+    count = n(),
+    mean = mean(msw_capita_kg_year),
+    median = median(msw_capita_kg_year),
+    sd = sd(msw_capita_kg_year)
+  )
 ```
 
 **Write the code yourself**
@@ -346,18 +331,26 @@ composition_tidy_capita_income_cat |>
 
 2.  Ensure that the summary table contains no `NA` by removing rows with `NA` before summarising the data.
 
-3.  Store the summary tableas a new object in your environment with the name `table_composition`
+3.  Store the summary table as a new object in your environment with the name `table_composition`
 
 ```{r}
-
-
+table_composition <- composition_tidy_capita_income_cat |> 
+  tidyr::drop_na(msw_capita_kg_year, food_organic_waste, plastic, paper_cardboard) |> 
+  group_by(income_cat) |> 
+  summarise(
+    count = n(),
+    mean_msw_total = mean(msw_capita_kg_year),
+    mean_organic = mean(food_organic_waste),
+    mean_plastic = mean(plastic),
+    mean_paper_cardboard = mean(paper_cardboard)
+  )
 ```
 
 # Task 4: Data visualisations
 
 Below, you will see three types of already prepared plots. There is nothing to write here for you, but the plots provide you with some additional code examples for plots.
 
-1.  Execute each code-chunk and observe how the plot in the Plots pane relates to the code.
+1.  Execute each code chunk and observe how the plot in the Plots pane relates to the code.
 
 ## Histograms
 
@@ -415,9 +408,9 @@ ggplot(data = composition_tidy_capita_income_cat,
 
 # Task 5: Tables
 
-The [`gt` R Package](https://gt.rstudio.com/index.html) is an extremely powerful package to style tables. Learning the details of how it works is beyond scope of this course, but below is an example for the `table_composition` table that we created when we summarised our data.
+The [`gt` R Package](https://gt.rstudio.com/index.html) is an extremely powerful package to style tables. Learning the details of how it works is beyond the scope of this course, but below is an example for the `table_composition` table that we created when we summarised our data.
 
-1.  Execute the following two code-chunks
+1.  Execute the following two code chunks
 2.  Read the code, observe the output in the Viewer pane, and describe in your own words what each function does
 
 -   `gt()`:
