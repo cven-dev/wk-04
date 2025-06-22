@@ -35,7 +35,7 @@ Follow these steps to import the data:
 2.  Run the code contained in the code chunk and fix any errors
 
 ```{r}
-global_waste_data <- read_csv(here::here("wk-04/data/country_level_data_0.csv"))
+global_waste_data <- read_csv(here::here("data/country_level_data_0.csv"))
 ```
 
 # Task 2: Data tidying
@@ -248,7 +248,7 @@ Thank you for working through the previous tasks. I am convinced that you have d
 1.  Run the code contained in the code-chunk and fix any errors
 
 ```{r}
-composition_tidy_capita_income_cat <- read_rds(here::here("wk-04/data/01-msw-generation-and-composition-by-income.rds"))
+composition_tidy_capita_income_cat <- read_rds(here::here("data/01-msw-generation-and-composition-by-income.rds"))
 ```
 
 ### Part 1
@@ -424,8 +424,8 @@ The [`gt` R Package](https://gt.rstudio.com/index.html) is an extremely powerful
 # table_composition object and import it here, so that you can get the following
 # code to work as I intended.
 
-table_composition <- read_rds(here::here("wk-04/data/03-table-composition.rds"))
-table_msw_generation <-  read_rds(here::here("wk-04/data/02-table-msw-generation.rds"))
+table_composition <- read_rds(here::here("data/03-table-composition.rds"))
+table_msw_generation <-  read_rds(here::here("data/02-table-msw-generation.rds"))
 
 ```
 
