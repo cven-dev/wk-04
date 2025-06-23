@@ -31,11 +31,12 @@ library(ggplot2)
 
 Follow these steps to import the data:
 
-1.  Use the `read_csv()` function to import the 'country_level_data_0.csv' file from the wk-04/data folder by assigning it to an object name `global_waste_data`
-2.  Run the code contained in the code chunk and fix any errors
+1.  Use the `read_csv()` function to import the 'country_level_data_0.csv' file from the data folder by assigning it to an object name `global_waste_data`
+2.  Run the code contained in the code chunk
+3.  Render and fix any errors
 
 ```{r}
-global_waste_data <- read_csv(here::here("data/country_level_data_0.csv"))
+
 ```
 
 # Task 2: Data tidying
@@ -54,8 +55,7 @@ Follow these steps to select specific variables:
 2.  Run the code contained in the code chunk and fix any errors
 
 ```{r}
-global_waste_data |> 
-  select(iso3c, ends_with("percent"))
+
 ```
 
 ### Part 2
@@ -75,12 +75,7 @@ global_waste_data |>
 3.  Render and fix any errors
 
 ```{r}
-composition <- global_waste_data |> 
-  select(country_name, 
-         income_id, 
-         population_population_number_of_people, 
-         total_msw_total_msw_generated_tons_year,
-         starts_with("composition"))
+
 ```
 
 ## dplyr::rename()
@@ -102,18 +97,7 @@ composition <- global_waste_data |>
 5.  Render and fix any errors
 
 ```{r}
-composition_tidy <- composition |> 
-  rename(food_organic_waste = composition_food_organic_waste_percent,
-         glass = composition_glass_percent,
-         metal = composition_metal_percent,
-         other = composition_other_percent,
-         paper_cardboard = composition_paper_cardboard_percent,
-         plastic = composition_plastic_percent,
-         rubber_leather = composition_rubber_leather_percent,
-         wood = composition_wood_percent,
-         yard_garden_green_waste = composition_yard_garden_green_waste_percent,
-         msw_tons_year = total_msw_total_msw_generated_tons_year,
-         population = population_population_number_of_people)
+
 ```
 
 # Task 3: Data transformation
@@ -127,8 +111,7 @@ Follow these steps to filter for missing data:
 1.  Use the `filter()` function in combination with `is.na()` to create a subset from `composition_tidy` containing observations for countries with missing data for the variable named food_organic_waste
 
 ```{r}
-composition_tidy |>  
-  filter(is.na(food_organic_waste))
+
 ```
 
 ### Part 2
@@ -138,8 +121,7 @@ composition_tidy |>
 1.  Use the `filter()` to create a subset from `composition_tidy` containing observations for countries classified as high-income countries (HIC).
 
 ```{r}
-composition_tidy |> 
-  filter(income_id == "HIC")
+
 ```
 
 ### Part 3
@@ -149,8 +131,7 @@ composition_tidy |>
 1.  Use the `filter()` to create a subset from `composition_tidy` containing observations for countries that are not classified as low-income countries (LIC).
 
 ```{r}
-composition_tidy |> 
-  filter(income_id != "LIC")
+
 ```
 
 ### Part 4
@@ -160,8 +141,7 @@ composition_tidy |>
 1.  Create a subset from `composition_tidy` containing observations for countries classified as high-income countries (HIC) and with food and organic waste composition greater than 50%.
 
 ```{r}
-composition_tidy |> 
-  filter(income_id == "HIC" & food_organic_waste > 50)
+
 ```
 
 ### Part 5
@@ -171,8 +151,7 @@ composition_tidy |>
 1.  Create a subset from `composition_tidy` containing observations for countries classified as high-income countries or low-income countries and with other waste composition greater than 40%.
 
 ```{r}
-composition_tidy |> 
-  filter((income_id == "HIC" | income_id == "LIC") & other > 40)
+
 ```
 
 ### Part 6
@@ -184,8 +163,7 @@ composition_tidy |>
 2.  Render and fix any errors
 
 ```{r}
-composition_tidy |> 
-  filter(country_name %in% c("Switzerland", "Ghana", "Kenya", "Turkey", "Nepal", "United States"))
+
 ```
 
 ## dplyr::mutate() & dplyr::relocate()
@@ -201,9 +179,7 @@ composition_tidy |>
 4.  Render and fix any errors
 
 ```{r}
-composition_tidy_capita <- composition_tidy |> 
-  mutate(msw_capita_kg_year = (msw_tons_year * 1000) / population) |> 
-  relocate(msw_capita_kg_year, .after = msw_tons_year)
+
 ```
 
 ## dplyr::mutate() & dplyr::case_when()
@@ -221,6 +197,7 @@ In class, we have not yet looked at the `case_when()` function. Use the exercise
 <!--# Remove this comment and use your own words to answer the question -->
 
 ```{r}
+#| eval: false 
 
 levels_income_cat <- c("high income", 
                       "upper-middle income",
@@ -264,9 +241,7 @@ Follow these steps to summarise the data:
 <!--# Remove this comment and use your own words to answer the question -->
 
 ```{r}
-composition_tidy_capita_income_cat |> 
-  group_by(income_id) |> 
-  summarise(count = n())
+
 ```
 
 **Write the code yourself**
@@ -278,9 +253,7 @@ composition_tidy_capita_income_cat |>
 <!--# Remove this comment and use your own words to answer the question -->
 
 ```{r}
-composition_tidy_capita_income_cat |> 
-  group_by(income_cat) |> 
-  summarise(count = n())
+
 ```
 
 Follow these steps to create a summary with mean values:
@@ -296,13 +269,7 @@ Follow these steps to create a summary with mean values:
 5.  Execute the code and observe the output in the Console. What has changed? How is that different to adding `na.rm = TRUE` as an argument to the `mean()` ?
 
 ```{r}
-composition_tidy_capita_income_cat |> 
-  # tidyr::drop_na(msw_capita_kg_year) |> 
-  group_by(income_cat) |> 
-  summarise(
-    count = n(),
-    mean_msw_total = mean(msw_capita_kg_year)
-  )
+
 ```
 
 **Write the code yourself**
@@ -314,15 +281,7 @@ composition_tidy_capita_income_cat |>
 3.  Store the summary table as a new object in your environment with the name `table_msw_generation`
 
 ```{r}
-table_msw_generation <- composition_tidy_capita_income_cat |> 
-  tidyr::drop_na(msw_capita_kg_year) |> 
-  group_by(income_cat) |> 
-  summarise(
-    count = n(),
-    mean = mean(msw_capita_kg_year),
-    median = median(msw_capita_kg_year),
-    sd = sd(msw_capita_kg_year)
-  )
+
 ```
 
 **Write the code yourself**
@@ -334,16 +293,7 @@ table_msw_generation <- composition_tidy_capita_income_cat |>
 3.  Store the summary table as a new object in your environment with the name `table_composition`
 
 ```{r}
-table_composition <- composition_tidy_capita_income_cat |> 
-  tidyr::drop_na(msw_capita_kg_year, food_organic_waste, plastic, paper_cardboard) |> 
-  group_by(income_cat) |> 
-  summarise(
-    count = n(),
-    mean_msw_total = mean(msw_capita_kg_year),
-    mean_organic = mean(food_organic_waste),
-    mean_plastic = mean(plastic),
-    mean_paper_cardboard = mean(paper_cardboard)
-  )
+
 ```
 
 # Task 4: Data visualisations
@@ -355,18 +305,24 @@ Below, you will see three types of already prepared plots. There is nothing to w
 ## Histograms
 
 ```{r}
+#| eval: false
+
 ggplot(data = composition_tidy_capita_income_cat,
        mapping = aes(x = food_organic_waste, fill = income_cat)) +
   geom_histogram()
 ```
 
 ```{r}
+#| eval: false
+
 ggplot(data = composition_tidy_capita_income_cat,
        mapping = aes(x = plastic, fill = income_cat)) +
   geom_histogram()
 ```
 
 ```{r}
+#| eval: false
+
 ggplot(data = composition_tidy_capita_income_cat, 
        mapping = aes(x = paper_cardboard)) +
   geom_histogram() +
@@ -374,6 +330,8 @@ ggplot(data = composition_tidy_capita_income_cat,
 ```
 
 ```{r}
+#| eval: false
+
 ggplot(data = composition_tidy_capita_income_cat,
        mapping = aes(x = other)) +
   geom_histogram() +
@@ -383,6 +341,7 @@ ggplot(data = composition_tidy_capita_income_cat,
 ## Scatterplot
 
 ```{r}
+#| eval: false
 
 ggplot(data = composition_tidy_capita_income_cat,
        mapping = aes(x = msw_capita_kg_year, 
@@ -395,6 +354,7 @@ ggplot(data = composition_tidy_capita_income_cat,
 ## Boxplot
 
 ```{r}
+#| eval: false
 
 ggplot(data = composition_tidy_capita_income_cat,
        mapping = aes(income_cat,

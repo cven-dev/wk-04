@@ -32,12 +32,10 @@ library(ggplot2)
 **Fill in the blanks**
 
 1.  Use the `read_csv()` function to import the 'country_level_data_0.csv' file from the wk-04/data folder by assigning it to an object name `global_waste_data`
-2.  Run the code contained in the code-chunk and fix any errors
-3.  Next to the code-chunk option `#| eval:` change the value from `false` to `true`
-4.  Render and fix any errors
+2.  Run the code contained in the code-chunk
+3.  Render and fix any errors
 
 ```{r}
-#| eval: true
 
 global_waste_data <- read_csv(here::here("data/country_level_data_0.csv"))
 ```
