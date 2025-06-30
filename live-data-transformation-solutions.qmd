@@ -85,7 +85,7 @@ sanitation |>
 
 #### Your turn
 
-1.  Use the `filter()` function to create a subset from the `sanitation` data object containing national estimates for the year 2020
+1.  Use the `filter()` function to create a subset from the `sanitation` data object containing national estimates (TODO) for the year 2020
 
 2.  Store the result as a new object in your environment with the name `sanitation_national_2020`
 
@@ -234,7 +234,7 @@ sanitation_national_2020_fct |>
 
 sanitation_national_2020_fct |> 
   filter(!is.na(percent)) |> 
-  summarise(percent = mean(percent),
+  summarise(mean = mean(percent),
             count = n())
 
 # Summarise works well with group_by (frequency tables)

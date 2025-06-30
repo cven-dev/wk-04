@@ -269,6 +269,15 @@ Follow these steps to create a summary with mean values:
 5.  Execute the code and observe the output in the Console. What has changed? How is that different to adding `na.rm = TRUE` as an argument to the `mean()` ?
 
 ```{r}
+#| eval: false
+
+composition_tidy_capita_income_cat |> 
+  # tidyr::drop_na(msw_capita_kg_year) |> 
+  group_by(income_cat) |> 
+  summarise(
+    count = n(),
+    mean_msw_total = mean(msw_capita_kg_year)
+  )
 
 ```
 
